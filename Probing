@@ -1,0 +1,96 @@
+
+#include <iostream>
+#include <cstdlib>
+
+#define SIZE 10   
+
+using namespace std;
+int hash_func(int key) {
+    return key % SIZE;
+}
+void insert(int hash_table[], int key) {
+    int index = hash_func(key);
+    int i = 0;
+    while (i < SIZE) {
+        if (hash_table[index] == -1) {
+            hash_table[index] = key;
+            cout << "Key " << key << " inserted at index " << index << endl;
+            return;
+        }
+        index = (index + 1) % SIZE;
+        i++;
+    }
+    cout << "Hash table is full" << endl;
+}
+void search(int hash_table[], int key) {
+    int index = hash_func(key);
+    int i = 0;
+    while (i < SIZE) {
+        if (hash_table[index] == key) {
+            cout << "Key " << key << " found at index " << index << endl;
+            return;
+        } else if (hash_table[index] == -1) {
+            cout << "Key " << key << " not found in hash table" << endl;
+            return;
+        }
+        index = (index + 1) % SIZE;
+        i++;
+    }
+    cout << "Key " << key << " not found in hash table" << endl;
+}
+void remove(int hash_table[], int key) {
+    int index = hash_func(key);
+    int i = 0;
+    while (i < SIZE) {
+        if (hash_table[index] == key) {
+            hash_table[index] = -1;
+            cout << "Key " << key << " deleted from index " << index << endl;
+            return;
+        } else if (hash_table[index] == -1) {
+            cout << "Key " << key << " not found in hash table" << endl;
+            return;
+        }
+        index = (index + 1) % SIZE;
+        i++;
+    }
+    cout << "Key " << key << " not found in hash table" << endl;
+}
+void display(int hash_table[]) {
+    cout << "Hash Table:" << endl;
+    for (int i = 0; i < SIZE; i++) {
+        cout << i << ": ";
+        if (hash_table[i] != -1) {
+            cout << hash_table[i];
+        }
+        cout << endl;
+    }
+}
+int main() {
+    int hash_table[SIZE];
+    for (int i = 0; i < SIZE; i++) {
+        hash_table[i] = -1;
+    }
+
+    insert(hash_table, 10);
+    insert(hash_table, 20);
+    insert(hash_table, 30);
+    insert(hash_table, 40);
+    insert(hash_table, 50);
+    insert(hash_table, 60);
+    insert(hash_table, 70);
+    insert(hash_table, 80);
+    insert(hash_table, 90);
+    insert(hash_table, 100);
+
+    display(hash_table);
+
+    search(hash_table, 50);
+    search(hash_table, 110);
+
+    remove(hash_table, 30);
+    remove(hash_table, 110);
+
+    display(hash_table);
+
+    return 0;
+}
