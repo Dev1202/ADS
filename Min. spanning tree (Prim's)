@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+#include <unordered_set>
+#include <utility>
+using namespace std;
+
+using edge = tuple<int, int, int>;
+
+using edge_queue = priority_queue<edge, vector<edge>, greater<edge>>;
+
+void prim(int adj_matrix[][100], int n) {
+    edge mst[n - 1];
+    unordered_set<int> visited;
+
+    visited.insert(0);
+
+    edge_queue pq;
+    for (int v = 1; v < n; ++v) {
+        pq.push(make_tuple(adj_matrix[0][v], 0, v));
+    }
+
+    int i = 0;
+    while (!pq.empty() && i < n - 1) {
+        int weight, u, v;
+        tie(weight, u, v) = pq.top();
+        pq.pop();
+
+        if (visited.count(u) && visited.count(v)) {
+            continue;
+        }
+
+        mst[i++] = make_tuple(weight, u, v);
+        int new_vertex = visited.count(u) ? v : u;
+        visited.insert(new_vertex);
+
+        for (int neighbor = 0; neighbor < n; ++neighbor) {
+            if (!visited.count(neighbor)) {
+                pq.push(make_tuple(adj_matrix[new_vertex][neighbor], new_vertex, neighbor));
+            }
+        }
+    }
+
+    cout << "Minimum Spanning Tree:" << endl;
+    for (int j = 0; j < n - 1; ++j) {
+        int weight, u, v;
+        tie(weight, u, v) = mst[j];
+        cout << u << " --(" << weight << ")-- " << v << endl;
+    }
+}
+
+int main() {
+    int adj_matrix[100][100] = {
+        {0, 5, 0, 4, 0},
+        {5, 0, 2, 1, 1},
+        {0, 2, 0, 0, 4},
+        {4, 1, 0, 0, 3},
+        {0, 1, 4, 3, 0}
+    };
+
+    prim(adj_matrix, 5);
+
+    return 0;
+}
